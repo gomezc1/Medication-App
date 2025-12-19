@@ -1,9 +1,5 @@
 # 💊 Medication Scheduler (WPF)
 
-A desktop prototype for tracking and scheduling medications, built with **C#**, **WPF**, and a light **MVVM** structure.
-
----
-
 ## Features
 
 - Dashboard overview of medications and today’s schedule  
