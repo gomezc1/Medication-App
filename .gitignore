@@ -1,0 +1,40 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.exe
+*.dll
+*.pdb
+
+# Visual Studio cache and user settings
+.vs/
+*.user
+*.suo
+
+# Test results
+TestResults/
+*.trx
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Local databases
+*.mdf
+*.ldf
+
+# IDE settings
+.idea/
+.vscode/
+
+# Other temporary/cache files
+*.cache
+*.log
+*.db
+
+# Publish outputs
+publish/
+/MedicationSchedulerSetup/Debug
+/MedicationSchedulerSetup/Release
+*.msi

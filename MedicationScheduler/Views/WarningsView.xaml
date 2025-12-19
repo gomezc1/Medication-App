@@ -1,0 +1,444 @@
+﻿<UserControl x:Class="MedicationScheduler.Views.WarningsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="900" d:DesignHeight="600"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <FontFamily x:Key="IconFont">Segoe MDL2 Assets</FontFamily>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <DropShadowEffect x:Key="CardShadow" BlurRadius="16" ShadowDepth="2" Opacity="0.18"/>
+
+        <!-- Banner colors -->
+        <SolidColorBrush x:Key="BannerBgBrush" Color="#FFE5C2"/>
+        <SolidColorBrush x:Key="BannerStrokeBrush" Color="#F2B579"/>
+        <SolidColorBrush x:Key="BannerTextBrush" Color="#5C4A41"/>
+
+        <Style x:Key="PillLabel" TargetType="Border">
+            <Setter Property="CornerRadius" Value="999"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="Background" Value="#EFF6FF"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <Style TargetType="Expander" x:Key="CleanExpander">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Expander">
+                        <Border CornerRadius="10"
+                                Background="White"
+                                BorderBrush="#E5E7EB"
+                                BorderThickness="1"
+                                Margin="0,0,0,12">
+                            <DockPanel>
+                                <!-- Header -->
+                                <ToggleButton x:Name="HeaderSite"
+                                              DockPanel.Dock="Top"
+                                              MinHeight="44"
+                                              Background="Transparent"
+                                              Foreground="#0F172A"
+                                              BorderBrush="{x:Null}"
+                                              Cursor="Hand"
+                                              Padding="16,10"
+                                              Content="{TemplateBinding Header}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch"
+                                              IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="10"/>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Border Grid.Column="0"
+                                                        Width="6"
+                                                        Margin="0,0,10,0"
+                                                        CornerRadius="3"
+                                                        VerticalAlignment="Stretch"
+                                                        Background="{Binding AccentBrush}"/>
+
+                                                <ContentPresenter Grid.Column="1"
+                                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+
+                                                <TextBlock x:Name="Chevron"
+                                                           Grid.Column="2"
+                                                           Margin="12,0,8,0"
+                                                           Text="&#xE70D;"
+                                                           FontFamily="{StaticResource IconFont}"
+                                                           Foreground="#64748B"
+                                                           VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter TargetName="Chevron" Property="Text" Value="&#xE70E;"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+
+                                <ContentPresenter x:Name="ExpandSite"
+                                                  Margin="16,0,16,16"
+                                                  Visibility="Collapsed"/>
+                            </DockPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="Margin" Value="0,16,0,8"/>
+        </Style>
+
+        <Style x:Key="SoftPanel" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="Background" Value="#FDF2F2"/>
+            <Setter Property="BorderBrush" Value="#FEE2E2"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="24,16,24,24">
+
+                <!-- Warning Banner -->
+                <Border Background="{StaticResource BannerBgBrush}"
+                        BorderBrush="{StaticResource BannerStrokeBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="16"
+                        Effect="{StaticResource CardShadow}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="28"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   Text="&#xE7BA;"
+                                   FontFamily="{StaticResource IconFont}"
+                                   Foreground="{StaticResource BannerTextBrush}"
+                                   VerticalAlignment="Top"
+                                   Margin="0,2,8,0"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Not Medical Advice"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource BannerTextBrush}"/>
+                            <TextBlock Text="This is an educational prototype. Always consult your healthcare provider or pharmacist about potential drug interactions and safety."
+                                       Foreground="{StaticResource BannerTextBrush}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Header Section -->
+                <Grid Margin="0,18,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Warnings &amp; Interactions"
+                                   FontSize="26" 
+                                   FontWeight="Bold" 
+                                   Foreground="#0F172A"
+                                   Margin="0,0,0,6"/>
+                        <TextBlock Text="Important safety information for your medications"
+                                   Foreground="#6B7280"/>
+                    </StackPanel>
+
+                    <!-- Refresh Button -->
+                    <Button Grid.Column="1"
+                            Content="🔄 Refresh"
+                            Command="{Binding RefreshWarningsCommand}"
+                            Background="#0F172A"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Padding="12,8"
+                            Cursor="Hand"
+                            VerticalAlignment="Top">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="8"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+
+                <!-- Summary Statistics -->
+                <Grid Margin="0,0,0,16" Visibility="{Binding HasWarnings, Converter={StaticResource BoolToVis}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Total Issues -->
+                    <Border Grid.Column="0" Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="1" CornerRadius="8" Padding="12" Height="79" VerticalAlignment="Top">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding TotalIssues}"
+                                       FontSize="28"
+                                       FontWeight="Bold"
+                                       Foreground="#DC2626"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Total Issues"
+                                       Foreground="#B91C1C"
+                                       HorizontalAlignment="Center"
+                                       FontSize="12"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Drug Interactions -->
+                    <Border Grid.Column="2" Background="#FFF7ED" BorderBrush="#FDBA74" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding DrugInteractionCount}"
+                                       FontSize="28"
+                                       FontWeight="Bold"
+                                       Foreground="#EA580C"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Drug Interactions"
+                                       Foreground="#C2410C"
+                                       HorizontalAlignment="Center"
+                                       FontSize="12"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Duplicate Warnings -->
+                    <Border Grid.Column="4" Background="#FEF9C3" BorderBrush="#FDE047" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding DuplicateWarningCount}"
+                                       FontSize="28"
+                                       FontWeight="Bold"
+                                       Foreground="#CA8A04"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Duplicate Ingredients"
+                                       Foreground="#A16207"
+                                       HorizontalAlignment="Center"
+                                       FontSize="12"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Loading Indicator -->
+                <Border Background="White" 
+                        CornerRadius="12" 
+                        Padding="40"
+                        Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="⏳ Loading warnings..." 
+                                   FontSize="16" 
+                                   Foreground="#6B7280"
+                                   HorizontalAlignment="Center"/>
+                        <ProgressBar IsIndeterminate="True" 
+                                     Width="200" 
+                                     Height="4" 
+                                     Margin="0,12,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Empty State -->
+                <Border Background="White" 
+                        CornerRadius="12" 
+                        Padding="40"
+                        Margin="0,0,0,16">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding HasWarnings}" Value="False"/>
+                                        <Condition Binding="{Binding IsLoading}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="✅" FontSize="64" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                        <TextBlock Text="No Warnings Found"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"
+                                   Foreground="#0F172A"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Add medications to check for interactions and warnings"
+                                   Foreground="#6B7280"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- FIXED: Bind to Medications instead of ItemsView -->
+                <ItemsControl ItemsSource="{Binding Medications}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Expander Style="{StaticResource CleanExpander}" DataContext="{Binding}">
+                                <Expander.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="16" 
+                                                       FontWeight="SemiBold" 
+                                                       Foreground="#0F172A"/>
+                                            <TextBlock Foreground="#6B7280" FontSize="13">
+                                                <Run Text="{Binding Dosage}"/>
+                                                <Run Text=" • "/>
+                                                <Run Text="{Binding Frequency}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <!-- Warning Badge -->
+                                        <Border Grid.Column="1"
+                                                Margin="4"
+                                                Background="#FEF2F2"
+                                                BorderBrush="#FCA5A5"
+                                                BorderThickness="2"
+                                                CornerRadius="12"
+                                                Padding="8"
+                                                Visibility="{Binding HasDrugInteractions, Converter={StaticResource BoolToVis}}">
+                                            <TextBlock Foreground="#DC2626" FontSize="12" FontWeight="SemiBold">
+                                                <Run Text="⚠️"/>
+                                                <Run Text="{Binding TotalWarnings, Mode=OneWay, StringFormat='{}{0} warnings'}"/>
+                                            </TextBlock>
+                                        </Border>
+                                    </Grid>
+                                </Expander.Header>
+
+                                <StackPanel Margin="0,8,0,0">
+
+                                    <!-- Detected Drug Interactions -->
+                                    <StackPanel Visibility="{Binding HasDrugInteractions, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Style="{StaticResource SectionHeader}" 
+                                                   Text="⚠️ Detected Interactions"/>
+                                        <ItemsControl ItemsSource="{Binding DrugInteractions}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Style="{StaticResource SoftPanel}"
+                                                            Background="#FEF2F2"
+                                                            BorderBrush="#FCA5A5"
+                                                            Margin="0,0,0,8">
+                                                        <StackPanel>
+                                                            <TextBlock FontWeight="SemiBold" Foreground="#DC2626">
+                                                                <Run Text="Interaction with: "/>
+                                                                <Run Text="{Binding Drug2Name}"/>
+                                                            </TextBlock>
+                                                            <TextBlock Text="{Binding Description}" 
+                                                                       TextWrapping="Wrap"
+                                                                       Margin="0,4,0,0"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+
+                                    <!-- Contraindications -->
+                                    <TextBlock Style="{StaticResource SectionHeader}" Text="Contraindications"/>
+                                    <Border Style="{StaticResource SoftPanel}"
+                                            Background="#FEF2F2"
+                                            BorderBrush="#FECACA">
+                                        <ItemsControl ItemsSource="{Binding Contraindications}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding}" 
+                                                               Margin="0,2,0,0"
+                                                               TextWrapping="Wrap"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Border>
+
+                                    <!-- Warnings & Precautions -->
+                                    <TextBlock Style="{StaticResource SectionHeader}" Text="Warnings &amp; Precautions"/>
+                                    <Border Style="{StaticResource SoftPanel}"
+                                            Background="#FFF7ED"
+                                            BorderBrush="#FED7AA">
+                                        <ItemsControl ItemsSource="{Binding WarningsPrecautions}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding}" 
+                                                               Margin="0,2,0,0"
+                                                               TextWrapping="Wrap"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Border>
+
+                                    <!-- Common Drug Interactions -->
+                                    <TextBlock Style="{StaticResource SectionHeader}" Text="Common Drug Interactions"/>
+                                    <Border Style="{StaticResource SoftPanel}"
+                                            Background="#EFF6FF"
+                                            BorderBrush="#DBEAFE">
+                                        <ItemsControl ItemsSource="{Binding CommonInteractions}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding}" 
+                                                               Margin="0,2,0,0"
+                                                               TextWrapping="Wrap"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Border>
+
+                                </StackPanel>
+                            </Expander>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Additional Resources -->
+                <Border Background="#F8FBFF" 
+                        CornerRadius="12" 
+                        Padding="16" 
+                        Margin="0,18,0,0"
+                        BorderBrush="#E5F0FF" 
+                        BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Need More Information?" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#0F172A"/>
+                        <TextBlock Text="For comprehensive drug interaction information, consult:" 
+                                   Foreground="#475569" 
+                                   Margin="0,6,0,8"/>
+                        <TextBlock Text="• Your healthcare provider or pharmacist" Margin="0,2,0,0"/>
+                        <TextBlock Text="• FDA Drug Safety Communications" Margin="0,2,0,0"/>
+                        <TextBlock Text="• Reliable medical databases (e.g., Drugs.com, MedlinePlus)" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
